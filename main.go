@@ -1,27 +1,29 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
+	"net/http"
 
+	"github.com/gorilla/mux"
 	"local.crypto-go/client"
 )
 
 func main() {
-	fiatCurrency := flag.String(
-		"fiat", "USD", "The name of the fiat currency you would like to know the crypto in.",
-	)
+	r := mux.NewRouter()
 
-	cryptoName := flag.String(
-		"crypto", "BTC", "The crypto currency you would like to analyze.",
-	)
-	flag.Parse()
+	r.HandleFunc("/{value}", func(w http.ResponseWriter, r *http.Request) {
+		// Get url value - value will be passed as a string to the FetchCrypto func
+		v := mux.Vars(r)
+		value := v["value"]
 
-	crypto, err := client.FetchCrypto(*fiatCurrency, *cryptoName)
-	if err != nil {
-		log.Fatal(err)
-	}
+		crypto, err := client.FetchCrypto("USD", value)
+		if err != nil {
+			fmt.Fprintf(w, "Error - please enter new URL")
+		}
 
-	fmt.Println(crypto)
+		fmt.Fprintf(w, "%v", crypto)
+	})
+
+	log.Fatal(http.ListenAndServe(":9000", r))
 }
