@@ -16,13 +16,12 @@ func main() {
 		// Get url value - value will be passed as a string to the FetchCrypto func
 		v := mux.Vars(r)
 		value := v["value"]
-
 		crypto, err := client.FetchCrypto("USD", value)
 		if err != nil {
 			fmt.Fprintf(w, "Error - please enter new URL")
 		}
-
 		fmt.Fprintf(w, "%v", crypto)
+
 	})
 
 	log.Fatal(http.ListenAndServe(":9000", r))

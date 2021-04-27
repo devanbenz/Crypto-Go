@@ -25,7 +25,7 @@ func FetchCrypto(fiat string, crypto string) (string, error) {
 	var cryptRes model.CryptoResponse
 
 	if err := json.NewDecoder(resp.Body).Decode(&cryptRes); err != nil {
-		log.Fatal(err)
+		return cryptRes.TextOutput(), err
 	}
 
 	return cryptRes.TextOutput(), nil
