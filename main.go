@@ -12,6 +12,10 @@ import (
 func main() {
 	r := mux.NewRouter()
 
+	r.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "./favicon.ico")
+	})
+
 	r.HandleFunc("/{value}", func(w http.ResponseWriter, r *http.Request) {
 		// Get url value - value will be passed as a string to the FetchCrypto func
 		v := mux.Vars(r)
